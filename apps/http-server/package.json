@@ -1,0 +1,15 @@
+{
+  "name": "@repo/htt-server",
+  "version": "1.0.0",
+  "description": "http  backend for matik",
+  "main": "index.js",
+  "dependencies": {
+    "@repo/db": "*",
+    "express": "^4.18.2"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "abhishek srivastava",
+  "license": "ISC"
+}
