@@ -32,6 +32,7 @@ model Game {
   timeLimit    Int
   startedAt    DateTime
   endedAt      DateTime
+  status    GameStatus
   gameMember  GameMember[]
   questions  Question[]
   answers  QuestionAnswer[]
@@ -43,13 +44,14 @@ model Game {
 model UserRating  {
   id   String  @id  @default(uuid())
   userId  String  @unique
-
+  rating  Int
   user   User  @relation(references:[id], fields:[userId])
 }
 
 model  GameMember {
   id      String    @id  @default(uuid())
   gameId  String
+  status  GameMemberStatus
   game    Game  @relation(references:[id], fields:[gameId])
   userId  String
   user User  @relation(references:[id], fields:[userId])
@@ -59,6 +61,17 @@ enum FriendStatus {
   pending
   accepted
   rejected
+}
+
+enum GameMemberStatus  {
+  won
+  lost
+}
+
+enum GameStatus {
+  started
+  searching_for_opponent
+  over
 }
 
 enum QuestionSign {
