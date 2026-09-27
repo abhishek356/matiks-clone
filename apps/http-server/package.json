@@ -2,10 +2,17 @@
   "name": "@repo/htt-server",
   "version": "1.0.0",
   "description": "http  backend for matik",
+  "type": "module",
   "main": "index.js",
   "dependencies": {
     "@repo/db": "*",
-    "express": "^4.18.2"
+    "@repo/common": "*",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/express": "^5.0.6",
+    "@types/jsonwebtoken": "^9.0.10",
+    "bcryptjs": "^3.0.3",
+    "express": "^4.22.3",
+    "jsonwebtoken": "^9.0.3"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

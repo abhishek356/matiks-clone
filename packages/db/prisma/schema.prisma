@@ -72,11 +72,12 @@ enum GameStatus {
   started
   searching_for_opponent
   over
+  running
 }
 
 enum QuestionSign {
   plus
-  minus
+  substraction
   multiply
   divide
 }

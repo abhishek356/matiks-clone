@@ -1,21 +1,12 @@
 import {WebSocketServer, WebSocket} from  'ws'
 import {verify, type JwtPayload} from 'jsonwebtoken'
 import{prisma} from  '@repo/db/client'
-
+import type { Game, User, ExtendedWs } from './type.js';
+import { generateQuestions } from './utils.js';
 const JWT_SECRET = process.env.JWT_SECRET!;
 const games: Map<string,Game> = new  Map()
 const wss = new WebSocketServer({port: 8000});
-export type Game = {
-    id:string,
-
-}
-export type  User = {
-    id:string,
-    name:string,
-    ws:WebSocket
-}
-
-export type ExtendedWs = WebSocket & {userId:string}
+const currentQuestion:Map<string,number> = new Map()
 
 const onlineUsers: Map<string, User> = new  Map();
 
@@ -82,15 +73,19 @@ wss.on("message",(event) =>{
 
         if(!runningGame)
         {
-     games.set({
+            const gameId  = crypto.randomUUID()
+     games.set(gameId,{
+                        id: gameId,
+
             members: [{
                 id: user.id,
-                name:  user.username
+                name:  user.username,
+                ws,
             }],
             adminId:user.id,
             status:"searching_for_opponent",
             questions:[],
-            answers:[]
+            answer:[]
         })
 
 
@@ -100,16 +95,42 @@ wss.on("message",(event) =>{
                 wsAll.send(
                     JSON.stringify({
                         type: "GAME_REQUEST",
-                        payload: {
-                            username:  user.username,
-                        }
+                        payload:{gameId}
                     })
                 )
         })
 
+        return;
+
         }
 
+        const currentGameFetched = games.get(runningGame.id)!;
+
+        currentGameFetched?.members.push({
+            id: user.id,
+            name:user.username,
+            ws,
+        })
+        
+        currentGameFetched.questions = generateQuestions();
+        currentGameFetched.status = 'running'
    
+        games.set(currentGameFetched.id,currentGameFetched)
+        const firstQuestion =  currentGameFetched.questions[0]!;
+        const key = `g:${currentGameFetched.id}-u:${user.id}-q:${firstQuestion.id}`
+        
+         currentQuestion.set(key,0)
+        
+        currentGameFetched.members.forEach((mem)=>{
+            mem.ws.send(JSON.stringify({
+            type:'GAME_ACCEPTED',
+            payload:{gameId: runningGame.id,
+                firstQuestion
+            }
+        }))
+        })
+
+       
        
     }
 

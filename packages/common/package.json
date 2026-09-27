@@ -3,9 +3,16 @@
   "version": "1.0.0",
   "description": "common utility for frontend and backend",
   "main": "index.js",
+  "type":"module",
+  "exports":{
+    "./zod":"./index.ts"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "abhishek srivastava",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "zod": "^4.6.5"
+  }
 }

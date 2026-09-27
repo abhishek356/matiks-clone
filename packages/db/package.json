@@ -4,6 +4,9 @@
   "description": "prisma db",
   "type":"module",
   "main": "index.js",
+  "exports": {
+    "./client":"./src/index.ts"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "generate": "npx prisma generate"
